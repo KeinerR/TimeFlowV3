@@ -137,6 +137,9 @@ const Clients = () => {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>{t('clients.new')}</DialogTitle>
+                <DialogDescription className="text-muted-foreground">
+                  {t('clients.new')}
+                </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
