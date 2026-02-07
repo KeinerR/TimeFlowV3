@@ -258,8 +258,15 @@ class Payment(PaymentBase):
     business_id: str
     appointment_id: Optional[str] = None
     receipt_url: Optional[str] = None
-    status: str = "completed"
+    status: str = "completed"  # completed, pending_validation, pending_payment
+    pending_reason: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+# Payment completion request for attended appointments
+class AppointmentPaymentRequest(BaseModel):
+    payment_method: str  # cash, transfer, pending
+    receipt_image: Optional[str] = None  # Base64 image for transfer
+    pending_reason: Optional[str] = None  # Reason if payment is pending
 
 class PlatformPayment(BaseModel):
     model_config = ConfigDict(extra="ignore")
