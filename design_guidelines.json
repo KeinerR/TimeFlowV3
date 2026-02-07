@@ -1,0 +1,168 @@
+{
+  "brand_identity": {
+    "name": "TimeFlow",
+    "ethos": "Fluidity, Precision, Mastery.",
+    "emotional_tone": "The calm of a perfectly organized schedule. Professional, Efficient, Trustworthy but Modern.",
+    "archetype": "The Performance Pro meets The Swiss Architect.",
+    "keywords": ["Synchronized", "Clarity", "Flow", "Pulse"]
+  },
+  "typography": {
+    "font_family": {
+      "headings": "\"Manrope\", sans-serif",
+      "body": "\"Public Sans\", sans-serif",
+      "mono": "\"JetBrains Mono\", monospace"
+    },
+    "weights": {
+      "headings": "700 (Bold) or 800 (ExtraBold) for Hero, 600 (SemiBold) for UI headers",
+      "body": "400 (Regular), 500 (Medium) for labels"
+    },
+    "tracking": {
+      "headings": "-0.02em (tight)",
+      "overline": "0.1em (wide)"
+    },
+    "import_url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Public+Sans:wght@300;400;500;600&display=swap"
+  },
+  "colors": {
+    "strategy": "High Contrast Utility with Vibrant 'Pulse' Accents. No gradients for backgrounds, only for 'active' borders or micro-interactions.",
+    "palette": {
+      "primary": {
+        "name": "Obsidian Flow",
+        "light": "#0F172A",
+        "dark": "#F8FAFC",
+        "description": "The structural anchor. Deep slate for text in light mode, off-white for text in dark mode."
+      },
+      "brand": {
+        "name": "Electric Coral",
+        "default": "#FF5533",
+        "hover": "#E63E1C",
+        "foreground": "#FFFFFF",
+        "description": "PRIMARY CTA COLOR. Use sparingy. High energy, distinct from generic blue/purple SaaS."
+      },
+      "secondary": {
+        "name": "Stone Neutral",
+        "light": "#F1F5F9",
+        "dark": "#1E293B",
+        "description": "Backgrounds for sidebars, cards, and secondary areas."
+      },
+      "accent": {
+        "name": "Signal Volt",
+        "default": "#3B82F6",
+        "description": "Use ONLY for information/active states, not for main CTAs."
+      },
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "error": "#EF4444"
+    },
+    "forbidden_colors": [
+      "#7351B7",
+      "#1B93A4",
+      "generic pure blue (#0000FF)"
+    ]
+  },
+  "visual_enhancers": {
+    "borders": {
+      "dashboard": "1px solid var(--border) with 'Grid Border' strategy (visible separators).",
+      "landing": "none or subtle 1px border-black/5"
+    },
+    "shadows": {
+      "card": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+      "floating": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+      "glow": "0 0 20px -5px var(--brand-color)"
+    },
+    "radius": {
+      "default": "0.5rem (8px) - Balanced",
+      "button": "0.375rem (6px) - Sharp/Tech",
+      "landing_pill": "9999px - Friendly"
+    },
+    "textures": {
+      "noise": "Add a subtle 3% noise overlay to the dashboard background to kill digital flatness."
+    }
+  },
+  "layout_strategy": {
+    "landing_page": {
+      "grid": "Bento Grid (Mode A). Asymmetrical 'Tetris' layout for features.",
+      "hero": "Split screen or Central focus with 'Tracing Beam' highlight.",
+      "spacing": "Generous. py-24 or py-32 for sections."
+    },
+    "dashboard": {
+      "grid": "High Density Grid (Mode B). 100% width/height utilization.",
+      "sidebar": "Fixed width (64px collapsed / 240px expanded), high contrast border-r.",
+      "spacing": "Tight but breathable. p-6 for containers, gap-4 for grids."
+    }
+  },
+  "component_guidelines": {
+    "buttons": {
+      "primary": "bg-brand text-brand-foreground hover:bg-brand-hover shadow-sm transition-all active:scale-95",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      "ghost": "hover:bg-accent hover:text-accent-foreground"
+    },
+    "cards": {
+      "style": "bg-card text-card-foreground border border-border shadow-sm",
+      "hover": "hover:border-brand/30 transition-colors duration-300"
+    },
+    "inputs": {
+      "style": "h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    },
+    "modals": {
+      "backdrop": "bg-background/80 backdrop-blur-sm",
+      "animation": "fade-in-0 zoom-in-95 slide-in-from-bottom-[48%]"
+    }
+  },
+  "images": {
+    "hero_bg": "https://images.unsplash.com/photo-1758208974170-3a3037da0c69?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODR8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBvZmZpY2UlMjBtaW5pbWFsaXN0JTIwYWJzdHJhY3R8ZW58MHx8fHwxNzcwNDIyODU3fDA&ixlib=rb-4.1.0&q=85",
+    "auth_bg": "https://images.unsplash.com/photo-1721995432582-b0a486848fca?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODR8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjBvZmZpY2UlMjBtaW5pbWFsaXN0JTIwYWJzdHJhY3R8ZW58MHx8fHwxNzcwNDIyODU3fDA&ixlib=rb-4.1.0&q=85",
+    "testimonials": [
+      "https://images.unsplash.com/photo-1650784854945-264d5b0b6b07?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NjZ8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBkaXZlcnNlJTIwdGVhbSUyMHBvcnRyYWl0c3xlbnwwfHx8fDE3NzA0MjI4NTh8MA&ixlib=rb-4.1.0&q=85",
+      "https://images.pexels.com/photos/5452254/pexels-photo-5452254.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    ],
+    "features": [
+      "https://images.unsplash.com/photo-1629881544138-c45fc917eb81?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTV8MHwxfHNlYXJjaHwxfHxoaWdoJTIwZW5kJTIwc2Fsb24lMjBpbnRlcmlvciUyMGJsdXJyeSUyMGJhY2tncm91bmR8ZW58MHx8fHwxNzcwNDIyODU5fDA&ixlib=rb-4.1.0&q=85"
+    ]
+  },
+  "motion_library": {
+    "landing": "Framer Motion. Use 'AnimatePresence' for tab switching. Parallax on Hero.",
+    "dashboard": "CSS Transitions for hover states. Minimal layout shift."
+  },
+  "instructions_to_main_agent": {
+    "1": "Install 'lucide-react' for icons. Use simple, stroke-based icons.",
+    "2": "Setup 'next-themes' or similar for Dark/Light mode toggle immediately.",
+    "3": "Implement the 'Grid Border' layout for the dashboard. Use border-r and border-b on grid items to create the visible grid.",
+    "4": "Use 'Manrope' font for all numbers and headings. It makes data readable.",
+    "5": "For the Landing Page, use the 'Bento' grid layout. Don't stack everything vertically.",
+    "6": "Use the specified 'Electric Coral' (#FF5533) for the main 'Book Now' or 'Create Account' buttons. Do not use Blue.",
+    "7": "Ensure all inputs have a 'data-testid' for testing.",
+    "8": "Use `sonner` for toast notifications."
+  },
+  "tailwind_config_extension": {
+    "colors": {
+      "brand": {
+        "DEFAULT": "#FF5533",
+        "foreground": "#FFFFFF",
+        "hover": "#E63E1C"
+      },
+      "sidebar": {
+        "DEFAULT": "hsl(var(--sidebar-background))",
+        "foreground": "hsl(var(--sidebar-foreground))",
+        "primary": "hsl(var(--sidebar-primary))",
+        "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+        "accent": "hsl(var(--sidebar-accent))",
+        "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+        "border": "hsl(var(--sidebar-border))",
+        "ring": "hsl(var(--sidebar-ring))"
+      }
+    },
+    "fontFamily": {
+      "sans": ["Public Sans", "sans-serif"],
+      "heading": ["Manrope", "sans-serif"],
+      "mono": ["JetBrains Mono", "monospace"]
+    }
+  },
+  "UNIVERSAL_GUIDELINES": [
+    "No gradients on backgrounds. Flat, high contrast, or subtle noise only.",
+    "No 'Inter' for Headings.",
+    "No center-aligned text blocks longer than 3 lines.",
+    "Always use 'gap-4' or 'gap-6' in flex/grid containers.",
+    "Dark mode must be 'Slate-950' or 'Zinc-950', not pure black.",
+    "Interactive elements must have a visible ':focus-visible' ring."
+  ]
+}
