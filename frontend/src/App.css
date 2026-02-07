@@ -1,34 +1,46 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* App.css - Additional styles */
+.App {
+  min-height: 100vh;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+/* Override for form inputs focus state */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+/* Loading spinner */
+.spinner {
+  border: 3px solid hsl(var(--muted));
+  border-top-color: hsl(var(--brand));
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.App-link {
-    color: #61dafb;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+/* Smooth page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+}
+
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
 }
