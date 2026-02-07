@@ -88,6 +88,7 @@ const DashboardLayout = () => {
         { icon: Building2, label: t('nav.businesses'), path: 'businesses' },
         { icon: Users, label: t('nav.users'), path: 'users' },
         { icon: Calendar, label: t('nav.appointments'), path: 'appointments' },
+        { icon: Briefcase, label: t('nav.clients'), path: 'clients' },
         { icon: DollarSign, label: t('nav.platform'), path: 'platform-finance' },
         { icon: BarChart3, label: t('nav.reports'), path: 'reports' },
         { icon: Settings, label: t('nav.settings'), path: 'settings' },
