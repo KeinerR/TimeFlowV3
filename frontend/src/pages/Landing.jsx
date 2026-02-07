@@ -101,7 +101,7 @@ const Landing = () => {
       const [hours, minutes] = bookingData.time.split(':');
       dateTime.setHours(parseInt(hours), parseInt(minutes));
       
-      await axios.post(`${API}/public/book`, {
+      await api.post('/public/book', {
         business_id: bookingData.business_id,
         service_id: bookingData.service_id,
         staff_id: bookingData.staff_id,
