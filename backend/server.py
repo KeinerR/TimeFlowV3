@@ -1,7 +1,9 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, status, UploadFile, File, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import RedirectResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
@@ -35,6 +37,18 @@ SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+
+# Custom middleware to fix HTTPS redirects
+class HTTPSRedirectMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        # Fix redirect URLs to use HTTPS when X-Forwarded-Proto is https
+        if response.status_code in (301, 302, 307, 308):
+            location = response.headers.get('location', '')
+            if location.startswith('http://') and request.headers.get('x-forwarded-proto') == 'https':
+                new_location = location.replace('http://', 'https://', 1)
+                response.headers['location'] = new_location
+        return response
 
 # Create the main app
 app = FastAPI(title="TimeFlow API", version="1.0.0")
