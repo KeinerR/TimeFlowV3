@@ -38,8 +38,6 @@ import {
   Clock
 } from 'lucide-react';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
 const DashboardLayout = () => {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
