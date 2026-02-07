@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+// Fix mixed content issue - ensure HTTPS is used
+const API = `${(process.env.REACT_APP_BACKEND_URL || 'https://booking-pro-21.preview.emergentagent.com')}/api`;
 
 const AuthContext = createContext(null);
 
