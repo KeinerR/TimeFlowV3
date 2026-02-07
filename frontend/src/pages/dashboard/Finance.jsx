@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DollarSign, TrendingUp, CreditCard, Loader2, Building2 } from 'lucide-react';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Finance = () => {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ const Finance = () => {
 
   const fetchBusinesses = async () => {
     try {
-      const res = await axios.get(`${API}/businesses`);
+      const res = await api.get(`/businesses`);
       setBusinesses(res.data);
       if (res.data.length > 0) {
         setSelectedBusiness(res.data[0].id);
@@ -47,7 +47,7 @@ const Finance = () => {
   const fetchIncome = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API}/finance/income/${selectedBusiness}?period=${period}`);
+      const res = await api.get(`/finance/income/${selectedBusiness}?period=${period}`);
       setIncomeData(res.data);
     } catch (error) {
       console.error('Error fetching income:', error);

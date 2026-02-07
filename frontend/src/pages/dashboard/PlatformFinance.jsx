@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { DollarSign, Plus, Building2, Loader2 } from 'lucide-react';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const PlatformFinance = () => {
   const { t } = useTranslation();
@@ -36,8 +36,8 @@ const PlatformFinance = () => {
     setLoading(true);
     try {
       const [platformRes, businessesRes] = await Promise.all([
-        axios.get(`${API}/finance/platform?period=${period}`),
-        axios.get(`${API}/businesses`)
+        api.get(`/finance/platform?period=${period}`),
+        api.get(`/businesses`)
       ]);
       setPlatformData(platformRes.data);
       setBusinesses(businessesRes.data);

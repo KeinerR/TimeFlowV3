@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { User, Globe, Moon, Sun, Save, Loader2 } from 'lucide-react';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Settings = () => {
   const { t, i18n } = useTranslation();
@@ -30,7 +30,7 @@ const Settings = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.put(`${API}/auth/me`, formData);
+      const res = await api.put(`/auth/me`, formData);
       updateUser(res.data);
       toast.success(t('common.save'));
     } catch (error) {
@@ -42,7 +42,7 @@ const Settings = () => {
 
   const handleLanguageChange = async (lang) => {
     try {
-      await axios.put(`${API}/auth/me/language?language=${lang}`);
+      await api.put(`/auth/me/language?language=${lang}`);
       i18n.changeLanguage(lang);
       toast.success(t('common.save'));
     } catch (error) {

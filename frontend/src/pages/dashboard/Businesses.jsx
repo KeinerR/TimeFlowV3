@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Businesses = () => {
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ const Businesses = () => {
 
   const fetchBusinesses = async () => {
     try {
-      const res = await axios.get(`${API}/businesses`);
+      const res = await api.get(`/businesses`);
       setBusinesses(res.data);
     } catch (error) {
       toast.error(t('errors.serverError'));
@@ -60,10 +60,10 @@ const Businesses = () => {
     e.preventDefault();
     try {
       if (selectedBusiness) {
-        await axios.put(`${API}/businesses/${selectedBusiness.id}`, formData);
+        await api.put(`/businesses/${selectedBusiness.id}`, formData);
         toast.success(t('common.save'));
       } else {
-        await axios.post(`${API}/businesses`, formData);
+        await api.post(`/businesses`, formData);
         toast.success(t('businesses.new'));
       }
       setDialogOpen(false);
@@ -77,7 +77,7 @@ const Businesses = () => {
   const handlePaymentConfig = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`${API}/businesses/${selectedBusiness.id}/payment-config`, paymentConfig);
+      await api.put(`/businesses/${selectedBusiness.id}/payment-config`, paymentConfig);
       toast.success(t('common.save'));
       setConfigDialogOpen(false);
       fetchBusinesses();
@@ -88,7 +88,7 @@ const Businesses = () => {
 
   const toggleStatus = async (business) => {
     try {
-      await axios.put(`${API}/businesses/${business.id}`, { is_active: !business.is_active });
+      await api.put(`/businesses/${business.id}`, { is_active: !business.is_active });
       toast.success(business.is_active ? t('common.disable') : t('common.enable'));
       fetchBusinesses();
     } catch (error) {

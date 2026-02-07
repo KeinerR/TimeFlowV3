@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search, Users, Loader2 } from 'lucide-react';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Clients = () => {
   const { t } = useTranslation();
@@ -22,7 +22,7 @@ const Clients = () => {
 
   const fetchClients = async () => {
     try {
-      const res = await axios.get(`${API}/users?role=client`);
+      const res = await api.get(`/users?role=client`);
       setClients(res.data);
     } catch (error) {
       console.error('Error fetching clients:', error);

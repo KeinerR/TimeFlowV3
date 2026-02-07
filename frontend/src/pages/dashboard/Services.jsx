@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Services = () => {
   const { t } = useTranslation();
@@ -48,11 +48,11 @@ const Services = () => {
   const fetchData = async () => {
     try {
       const [servicesRes, businessesRes, staffRes] = await Promise.all([
-        axios.get(`${API}/services`),
+        api.get(`/services`),
         user?.role === 'super_admin' || user?.role === 'admin' 
-          ? axios.get(`${API}/businesses`)
+          ? api.get(`/businesses`)
           : Promise.resolve({ data: [] }),
-        axios.get(`${API}/staff`)
+        api.get(`/staff`)
       ]);
       setServices(servicesRes.data);
       setBusinesses(businessesRes.data);
@@ -74,10 +74,10 @@ const Services = () => {
       };
 
       if (selectedService) {
-        await axios.put(`${API}/services/${selectedService.id}`, data);
+        await api.put(`/services/${selectedService.id}`, data);
         toast.success(t('common.save'));
       } else {
-        await axios.post(`${API}/services`, data);
+        await api.post(`/services`, data);
         toast.success(t('services.new'));
       }
       setDialogOpen(false);
@@ -90,7 +90,7 @@ const Services = () => {
 
   const toggleStatus = async (service) => {
     try {
-      await axios.put(`${API}/services/${service.id}`, { is_active: !service.is_active });
+      await api.put(`/services/${service.id}`, { is_active: !service.is_active });
       toast.success(service.is_active ? t('common.disable') : t('common.enable'));
       fetchData();
     } catch (error) {

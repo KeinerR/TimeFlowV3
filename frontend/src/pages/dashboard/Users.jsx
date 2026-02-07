@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const UsersPage = () => {
   const { t } = useTranslation();
@@ -52,9 +52,9 @@ const UsersPage = () => {
     try {
       const params = roleFilter !== 'all' ? `?role=${roleFilter}` : '';
       const [usersRes, businessesRes] = await Promise.all([
-        axios.get(`${API}/users${params}`),
+        api.get(`/users${params}`),
         user?.role === 'super_admin' || user?.role === 'admin'
-          ? axios.get(`${API}/businesses`)
+          ? api.get(`/businesses`)
           : Promise.resolve({ data: [] })
       ]);
       setUsers(usersRes.data);
@@ -70,7 +70,7 @@ const UsersPage = () => {
     e.preventDefault();
     try {
       if (selectedUser) {
-        await axios.put(`${API}/users/${selectedUser.id}`, {
+        await api.put(`/users/${selectedUser.id}`, {
           first_name: formData.first_name,
           last_name: formData.last_name,
           phone: formData.phone,
@@ -78,11 +78,11 @@ const UsersPage = () => {
           is_active: true
         });
         if (formData.business_ids.length > 0) {
-          await axios.put(`${API}/users/${selectedUser.id}/businesses`, formData.business_ids);
+          await api.put(`/users/${selectedUser.id}/businesses`, formData.business_ids);
         }
         toast.success(t('common.save'));
       } else {
-        await axios.post(`${API}/users?role=${formData.role}&business_ids=${formData.business_ids.join(',')}`, {
+        await api.post(`/users?role=${formData.role}&business_ids=${formData.business_ids.join(',')}`, {
           email: formData.email,
           password: formData.password,
           first_name: formData.first_name,
@@ -101,7 +101,7 @@ const UsersPage = () => {
 
   const toggleStatus = async (u) => {
     try {
-      await axios.put(`${API}/users/${u.id}`, { is_active: !u.is_active });
+      await api.put(`/users/${u.id}`, { is_active: !u.is_active });
       toast.success(u.is_active ? t('common.disable') : t('common.enable'));
       fetchData();
     } catch (error) {

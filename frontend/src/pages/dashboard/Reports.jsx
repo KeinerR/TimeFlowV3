@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -12,7 +12,7 @@ import { es } from 'date-fns/locale';
 import { BarChart3, Calendar as CalendarIcon, Users, DollarSign, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Reports = () => {
   const { t } = useTranslation();
@@ -36,9 +36,9 @@ const Reports = () => {
       if (dateRange.to) params.append('date_to', dateRange.to.toISOString().split('T')[0]);
 
       const [aptsRes, incomeRes, clientsRes] = await Promise.all([
-        axios.get(`${API}/reports/appointments?${params}`),
-        axios.get(`${API}/reports/income?${params}`),
-        axios.get(`${API}/reports/clients?${params}`)
+        api.get(`/reports/appointments?${params}`),
+        api.get(`/reports/income?${params}`),
+        api.get(`/reports/clients?${params}`)
       ]);
 
       setAppointmentsReport(aptsRes.data);

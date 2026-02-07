@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -39,9 +39,9 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const [appointmentsRes, reportsRes] = await Promise.all([
-        axios.get(`${API}/appointments`),
+        api.get(`/appointments`),
         user?.role !== 'client' && user?.role !== 'staff' 
-          ? axios.get(`${API}/reports/appointments`)
+          ? api.get(`/reports/appointments`)
           : Promise.resolve({ data: {} })
       ]);
 

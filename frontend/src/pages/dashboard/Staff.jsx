@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Staff = () => {
   const { t } = useTranslation();
@@ -61,12 +61,12 @@ const Staff = () => {
   const fetchData = async () => {
     try {
       const [staffRes, usersRes, businessesRes, servicesRes] = await Promise.all([
-        axios.get(`${API}/staff`),
-        axios.get(`${API}/users`),
+        api.get(`/staff`),
+        api.get(`/users`),
         user?.role === 'super_admin' || user?.role === 'admin'
-          ? axios.get(`${API}/businesses`)
+          ? api.get(`/businesses`)
           : Promise.resolve({ data: [] }),
-        axios.get(`${API}/services`)
+        api.get(`/services`)
       ]);
       setStaffList(staffRes.data);
       setUsers(usersRes.data.filter(u => u.role !== 'super_admin'));
@@ -88,13 +88,13 @@ const Staff = () => {
       };
 
       if (selectedStaff) {
-        await axios.put(`${API}/staff/${selectedStaff.id}`, {
+        await api.put(`/staff/${selectedStaff.id}`, {
           service_ids: data.service_ids,
           schedule: data.schedule
         });
         toast.success(t('common.save'));
       } else {
-        await axios.post(`${API}/staff`, data);
+        await api.post(`/staff`, data);
         toast.success(t('staff.new'));
       }
       setDialogOpen(false);
@@ -107,7 +107,7 @@ const Staff = () => {
 
   const toggleStatus = async (staff) => {
     try {
-      await axios.put(`${API}/staff/${staff.id}`, { is_active: !staff.is_active });
+      await api.put(`/staff/${staff.id}`, { is_active: !staff.is_active });
       toast.success(staff.is_active ? t('common.disable') : t('common.enable'));
       fetchData();
     } catch (error) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
-import axios from 'axios';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,7 +24,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
 
 const Appointments = () => {
   const { t, i18n } = useTranslation();
@@ -57,11 +57,11 @@ const Appointments = () => {
     try {
       const params = statusFilter !== 'all' ? `?status=${statusFilter}` : '';
       const [aptsRes, servicesRes, staffRes, businessesRes] = await Promise.all([
-        axios.get(`${API}/appointments${params}`),
-        axios.get(`${API}/services`),
-        axios.get(`${API}/staff`),
+        api.get(`/appointments${params}`),
+        api.get(`/services`),
+        api.get(`/staff`),
         user?.role === 'super_admin' || user?.role === 'admin' 
-          ? axios.get(`${API}/businesses`)
+          ? api.get(`/businesses`)
           : Promise.resolve({ data: [] })
       ]);
 
@@ -71,7 +71,7 @@ const Appointments = () => {
       setBusinesses(businessesRes.data);
 
       if (user?.role !== 'client') {
-        const clientsRes = await axios.get(`${API}/users?role=client`);
+        const clientsRes = await api.get(`/users?role=client`);
         setClients(clientsRes.data);
       }
     } catch (error) {
@@ -89,7 +89,7 @@ const Appointments = () => {
       const [hours, minutes] = formData.time.split(':');
       dateTime.setHours(parseInt(hours), parseInt(minutes));
 
-      await axios.post(`${API}/appointments`, {
+      await api.post(`/appointments`, {
         business_id: formData.business_id || user?.businesses?.[0],
         service_id: formData.service_id,
         staff_id: formData.staff_id,
@@ -112,7 +112,7 @@ const Appointments = () => {
       const data = { status };
       if (price_final) data.price_final = price_final;
       
-      await axios.put(`${API}/appointments/${id}`, data);
+      await api.put(`/appointments/${id}`, data);
       toast.success(t(`appointments.status.${status}`));
       fetchData();
     } catch (error) {
