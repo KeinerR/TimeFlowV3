@@ -17,13 +17,23 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-// Request interceptor to ensure token is included
+// Request interceptor to add trailing slash and token
 api.interceptors.request.use(
   (config) => {
+    // Add token
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Add trailing slash if not present (prevents redirects)
+    if (config.url && !config.url.endsWith('/') && !config.url.includes('?')) {
+      config.url = config.url + '/';
+    } else if (config.url && config.url.includes('?') && !config.url.split('?')[0].endsWith('/')) {
+      const [path, query] = config.url.split('?');
+      config.url = `${path}/?${query}`;
+    }
+    
     return config;
   },
   (error) => Promise.reject(error)
