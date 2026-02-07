@@ -55,7 +55,7 @@ const DashboardLayout = () => {
 
   const fetchNotifications = async () => {
     try {
-      const res = await api.get('/notifications/?unread_only=true');
+      const res = await api.get('/notifications?unread_only=true');
       setNotifications(res.data);
       setUnreadCount(res.data.length);
     } catch (error) {

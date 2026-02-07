@@ -54,7 +54,7 @@ const Landing = () => {
 
   const fetchBusinesses = async () => {
     try {
-      const res = await api.get('/public/businesses/');
+      const res = await api.get('/public/businesses');
       setBusinesses(res.data);
     } catch (error) {
       console.error('Error fetching businesses:', error);
