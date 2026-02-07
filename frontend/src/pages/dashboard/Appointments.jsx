@@ -129,6 +129,64 @@ const Appointments = () => {
       toast.error(t('errors.serverError'));
     }
   };
+  
+  // Handle opening payment dialog
+  const openPaymentDialog = (appointment) => {
+    setSelectedAppointment(appointment);
+    setPaymentMethod('');
+    setPendingReason('');
+    setReceiptImage(null);
+    setReceiptPreview(null);
+    setPaymentDialogOpen(true);
+  };
+  
+  // Handle file upload for receipt
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setReceiptImage(reader.result);
+        setReceiptPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  // Submit payment and mark as attended
+  const handlePaymentSubmit = async () => {
+    if (!paymentMethod) {
+      toast.error(t('finance.paymentMethod') + ' ' + t('errors.required'));
+      return;
+    }
+    
+    if (paymentMethod === 'transfer' && !receiptImage) {
+      toast.error(t('finance.uploadReceipt') + ' ' + t('errors.required'));
+      return;
+    }
+    
+    if (paymentMethod === 'pending' && !pendingReason) {
+      toast.error(t('finance.pendingReason') + ' ' + t('errors.required'));
+      return;
+    }
+    
+    setSubmittingPayment(true);
+    try {
+      await api.post(`/appointments/${selectedAppointment.id}/complete`, {
+        payment_method: paymentMethod,
+        receipt_image: receiptImage,
+        pending_reason: pendingReason
+      });
+      
+      toast.success(t('appointments.status.attended'));
+      setPaymentDialogOpen(false);
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || t('errors.serverError'));
+    } finally {
+      setSubmittingPayment(false);
+    }
+  };
 
   const getStatusBadge = (status) => {
     const variants = {
