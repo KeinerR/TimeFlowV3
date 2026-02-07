@@ -1512,6 +1512,9 @@ api_router.include_router(public_router)
 
 app.include_router(api_router)
 
+# Add HTTPS redirect middleware first
+app.add_middleware(HTTPSRedirectMiddleware)
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
