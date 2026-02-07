@@ -1250,7 +1250,7 @@ async def complete_appointment_with_payment(
         apt["client_id"],
         "appointment_attended",
         "Cita Atendida",
-        f"Tu cita ha sido completada exitosamente"
+        "Tu cita ha sido completada exitosamente"
     )
     
     if staff:
@@ -1258,7 +1258,7 @@ async def complete_appointment_with_payment(
             staff["user_id"],
             "appointment_attended",
             "Cita Completada",
-            f"Has completado una cita"
+            "Has completado una cita"
         )
     
     return {
@@ -1466,7 +1466,7 @@ async def public_booking(booking: PublicBookingRequest):
         staff["user_id"],
         "appointment_created",
         "Nueva Cita Asignada",
-        f"Se te ha asignado una nueva cita"
+        "Se te ha asignado una nueva cita"
     )
     
     # Send confirmation email
