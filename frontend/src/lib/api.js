@@ -17,6 +17,22 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
+// Helper function to parse error messages
+export const parseErrorMessage = (error, defaultMessage = 'Server error') => {
+  if (error.response?.data?.detail) {
+    const detail = error.response.data.detail;
+    if (typeof detail === 'string') {
+      return detail;
+    } else if (Array.isArray(detail)) {
+      // Pydantic validation error
+      return detail.map(d => d.msg || d.message || JSON.stringify(d)).join(', ');
+    } else if (typeof detail === 'object') {
+      return detail.msg || detail.message || JSON.stringify(detail);
+    }
+  }
+  return defaultMessage;
+};
+
 // Request interceptor to add trailing slash and token
 api.interceptors.request.use(
   (config) => {
