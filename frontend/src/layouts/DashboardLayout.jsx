@@ -55,7 +55,7 @@ const DashboardLayout = () => {
 
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(`${API}/notifications?unread_only=true`);
+      const res = await api.get('/notifications?unread_only=true');
       setNotifications(res.data);
       setUnreadCount(res.data.length);
     } catch (error) {
@@ -65,7 +65,7 @@ const DashboardLayout = () => {
 
   const markAllRead = async () => {
     try {
-      await axios.put(`${API}/notifications/read-all`);
+      await api.put('/notifications/read-all');
       setUnreadCount(0);
       fetchNotifications();
     } catch (error) {
