@@ -1,0 +1,532 @@
+{
+  "es": {
+    "translation": {
+      "common": {
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "create": "Crear",
+        "search": "Buscar",
+        "filter": "Filtrar",
+        "loading": "Cargando...",
+        "noData": "No hay datos",
+        "actions": "Acciones",
+        "status": "Estado",
+        "date": "Fecha",
+        "time": "Hora",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "phone": "Teléfono",
+        "address": "Dirección",
+        "description": "Descripción",
+        "price": "Precio",
+        "duration": "Duración",
+        "minutes": "minutos",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "enable": "Habilitar",
+        "disable": "Inhabilitar",
+        "yes": "Sí",
+        "no": "No",
+        "confirm": "Confirmar",
+        "back": "Volver",
+        "next": "Siguiente",
+        "previous": "Anterior",
+        "all": "Todos",
+        "settings": "Configuración",
+        "profile": "Perfil",
+        "logout": "Cerrar sesión",
+        "language": "Idioma",
+        "theme": "Tema",
+        "light": "Claro",
+        "dark": "Oscuro"
+      },
+      "auth": {
+        "login": "Iniciar sesión",
+        "register": "Registrarse",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar contraseña",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "noAccount": "¿No tienes cuenta?",
+        "hasAccount": "¿Ya tienes cuenta?",
+        "signUp": "Crear cuenta",
+        "signIn": "Entrar",
+        "welcomeBack": "Bienvenido de nuevo",
+        "createAccount": "Crear una cuenta",
+        "loginSubtitle": "Ingresa tus credenciales para acceder",
+        "registerSubtitle": "Completa tus datos para registrarte"
+      },
+      "landing": {
+        "hero": {
+          "title": "Gestiona tu negocio de servicios con facilidad",
+          "subtitle": "Reservas online, gestión de citas, staff y clientes en una sola plataforma",
+          "cta": "Comenzar ahora",
+          "ctaSecondary": "Ver demo"
+        },
+        "features": {
+          "title": "Todo lo que necesitas",
+          "subtitle": "Herramientas poderosas para tu negocio",
+          "booking": {
+            "title": "Reservas Online",
+            "description": "Permite a tus clientes reservar citas 24/7 desde cualquier dispositivo"
+          },
+          "calendar": {
+            "title": "Calendario Inteligente",
+            "description": "Visualiza y gestiona todas las citas de tu equipo en tiempo real"
+          },
+          "staff": {
+            "title": "Gestión de Staff",
+            "description": "Asigna servicios, horarios y gestiona la disponibilidad de tu equipo"
+          },
+          "reports": {
+            "title": "Reportes y Análisis",
+            "description": "Toma decisiones informadas con reportes detallados de tu negocio"
+          },
+          "payments": {
+            "title": "Pagos Integrados",
+            "description": "Acepta pagos online con PayU y transferencias bancarias"
+          },
+          "notifications": {
+            "title": "Notificaciones",
+            "description": "Mantén informados a tus clientes con recordatorios automáticos"
+          }
+        },
+        "booking": {
+          "title": "Reservar una cita",
+          "selectBusiness": "Seleccionar negocio",
+          "selectService": "Seleccionar servicio",
+          "selectStaff": "Seleccionar profesional",
+          "selectDate": "Seleccionar fecha",
+          "selectTime": "Seleccionar hora",
+          "yourInfo": "Tus datos",
+          "bookNow": "Reservar ahora",
+          "success": "¡Cita reservada exitosamente!",
+          "error": "Error al reservar la cita"
+        },
+        "footer": {
+          "rights": "Todos los derechos reservados",
+          "privacy": "Privacidad",
+          "terms": "Términos"
+        }
+      },
+      "dashboard": {
+        "welcome": "Bienvenido",
+        "overview": "Resumen",
+        "todayAppointments": "Citas de hoy",
+        "weekAppointments": "Citas esta semana",
+        "totalClients": "Total de clientes",
+        "totalIncome": "Ingresos totales",
+        "recentActivity": "Actividad reciente",
+        "quickActions": "Acciones rápidas",
+        "newAppointment": "Nueva cita",
+        "newClient": "Nuevo cliente",
+        "viewCalendar": "Ver calendario"
+      },
+      "nav": {
+        "dashboard": "Dashboard",
+        "appointments": "Citas",
+        "calendar": "Calendario",
+        "clients": "Clientes",
+        "staff": "Staff",
+        "services": "Servicios",
+        "businesses": "Negocios",
+        "users": "Usuarios",
+        "finance": "Finanzas",
+        "reports": "Reportes",
+        "settings": "Configuración",
+        "notifications": "Notificaciones",
+        "platform": "Plataforma"
+      },
+      "appointments": {
+        "title": "Citas",
+        "new": "Nueva cita",
+        "edit": "Editar cita",
+        "details": "Detalles de la cita",
+        "client": "Cliente",
+        "service": "Servicio",
+        "staff": "Profesional",
+        "date": "Fecha",
+        "time": "Hora",
+        "notes": "Notas",
+        "status": {
+          "pending": "Pendiente",
+          "confirmed": "Confirmada",
+          "cancelled": "Cancelada",
+          "rescheduled": "Reprogramada",
+          "attended": "Atendida",
+          "no_show": "No asistió"
+        },
+        "actions": {
+          "confirm": "Confirmar",
+          "cancel": "Cancelar",
+          "reschedule": "Reprogramar",
+          "markAttended": "Marcar atendida",
+          "markNoShow": "Marcar no asistió"
+        },
+        "finalPrice": "Precio final"
+      },
+      "services": {
+        "title": "Servicios",
+        "new": "Nuevo servicio",
+        "edit": "Editar servicio",
+        "name": "Nombre del servicio",
+        "duration": "Duración (minutos)",
+        "price": "Precio",
+        "assignStaff": "Asignar staff"
+      },
+      "staff": {
+        "title": "Staff",
+        "new": "Nuevo miembro",
+        "edit": "Editar staff",
+        "schedule": "Horario",
+        "services": "Servicios asignados",
+        "availability": "Disponibilidad"
+      },
+      "clients": {
+        "title": "Clientes",
+        "new": "Nuevo cliente",
+        "edit": "Editar cliente",
+        "history": "Historial de citas",
+        "totalVisits": "Visitas totales",
+        "lastVisit": "Última visita"
+      },
+      "businesses": {
+        "title": "Negocios",
+        "new": "Nuevo negocio",
+        "edit": "Editar negocio",
+        "paymentConfig": "Configuración de pagos",
+        "payu": "PayU",
+        "transfer": "Transferencia bancaria"
+      },
+      "users": {
+        "title": "Usuarios",
+        "new": "Nuevo usuario",
+        "edit": "Editar usuario",
+        "role": "Rol",
+        "assignBusiness": "Asignar a negocio",
+        "roles": {
+          "super_admin": "Super Admin",
+          "admin": "Admin",
+          "business": "Business",
+          "staff": "Staff",
+          "client": "Cliente"
+        }
+      },
+      "finance": {
+        "title": "Finanzas",
+        "income": "Ingresos",
+        "expenses": "Gastos",
+        "balance": "Balance",
+        "period": {
+          "day": "Hoy",
+          "week": "Esta semana",
+          "month": "Este mes",
+          "year": "Este año"
+        },
+        "payments": "Pagos",
+        "newPayment": "Registrar pago",
+        "platformPayments": "Pagos a la plataforma"
+      },
+      "reports": {
+        "title": "Reportes",
+        "appointments": "Reporte de citas",
+        "income": "Reporte de ingresos",
+        "clients": "Reporte de clientes",
+        "staff": "Reporte de staff",
+        "dateRange": "Rango de fechas",
+        "generate": "Generar reporte"
+      },
+      "notifications": {
+        "title": "Notificaciones",
+        "markAllRead": "Marcar todas como leídas",
+        "noNotifications": "No hay notificaciones",
+        "types": {
+          "appointment_created": "Cita creada",
+          "appointment_confirmed": "Cita confirmada",
+          "appointment_cancelled": "Cita cancelada",
+          "appointment_rescheduled": "Cita reprogramada",
+          "appointment_attended": "Cita atendida",
+          "appointment_no_show": "No asistió"
+        }
+      },
+      "errors": {
+        "required": "Este campo es requerido",
+        "invalidEmail": "Correo electrónico inválido",
+        "passwordMismatch": "Las contraseñas no coinciden",
+        "minLength": "Mínimo {{min}} caracteres",
+        "serverError": "Error del servidor",
+        "unauthorized": "No autorizado",
+        "notFound": "No encontrado"
+      }
+    }
+  },
+  "en": {
+    "translation": {
+      "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "create": "Create",
+        "search": "Search",
+        "filter": "Filter",
+        "loading": "Loading...",
+        "noData": "No data",
+        "actions": "Actions",
+        "status": "Status",
+        "date": "Date",
+        "time": "Time",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "description": "Description",
+        "price": "Price",
+        "duration": "Duration",
+        "minutes": "minutes",
+        "active": "Active",
+        "inactive": "Inactive",
+        "enable": "Enable",
+        "disable": "Disable",
+        "yes": "Yes",
+        "no": "No",
+        "confirm": "Confirm",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "all": "All",
+        "settings": "Settings",
+        "profile": "Profile",
+        "logout": "Logout",
+        "language": "Language",
+        "theme": "Theme",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "auth": {
+        "login": "Login",
+        "register": "Register",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "forgotPassword": "Forgot password?",
+        "noAccount": "Don't have an account?",
+        "hasAccount": "Already have an account?",
+        "signUp": "Sign up",
+        "signIn": "Sign in",
+        "welcomeBack": "Welcome back",
+        "createAccount": "Create an account",
+        "loginSubtitle": "Enter your credentials to access",
+        "registerSubtitle": "Fill in your details to register"
+      },
+      "landing": {
+        "hero": {
+          "title": "Manage your service business with ease",
+          "subtitle": "Online booking, appointment management, staff and clients in one platform",
+          "cta": "Get started",
+          "ctaSecondary": "See demo"
+        },
+        "features": {
+          "title": "Everything you need",
+          "subtitle": "Powerful tools for your business",
+          "booking": {
+            "title": "Online Booking",
+            "description": "Let your clients book appointments 24/7 from any device"
+          },
+          "calendar": {
+            "title": "Smart Calendar",
+            "description": "View and manage all your team's appointments in real time"
+          },
+          "staff": {
+            "title": "Staff Management",
+            "description": "Assign services, schedules and manage your team's availability"
+          },
+          "reports": {
+            "title": "Reports & Analytics",
+            "description": "Make informed decisions with detailed business reports"
+          },
+          "payments": {
+            "title": "Integrated Payments",
+            "description": "Accept online payments with PayU and bank transfers"
+          },
+          "notifications": {
+            "title": "Notifications",
+            "description": "Keep your clients informed with automatic reminders"
+          }
+        },
+        "booking": {
+          "title": "Book an appointment",
+          "selectBusiness": "Select business",
+          "selectService": "Select service",
+          "selectStaff": "Select professional",
+          "selectDate": "Select date",
+          "selectTime": "Select time",
+          "yourInfo": "Your information",
+          "bookNow": "Book now",
+          "success": "Appointment booked successfully!",
+          "error": "Error booking appointment"
+        },
+        "footer": {
+          "rights": "All rights reserved",
+          "privacy": "Privacy",
+          "terms": "Terms"
+        }
+      },
+      "dashboard": {
+        "welcome": "Welcome",
+        "overview": "Overview",
+        "todayAppointments": "Today's appointments",
+        "weekAppointments": "This week's appointments",
+        "totalClients": "Total clients",
+        "totalIncome": "Total income",
+        "recentActivity": "Recent activity",
+        "quickActions": "Quick actions",
+        "newAppointment": "New appointment",
+        "newClient": "New client",
+        "viewCalendar": "View calendar"
+      },
+      "nav": {
+        "dashboard": "Dashboard",
+        "appointments": "Appointments",
+        "calendar": "Calendar",
+        "clients": "Clients",
+        "staff": "Staff",
+        "services": "Services",
+        "businesses": "Businesses",
+        "users": "Users",
+        "finance": "Finance",
+        "reports": "Reports",
+        "settings": "Settings",
+        "notifications": "Notifications",
+        "platform": "Platform"
+      },
+      "appointments": {
+        "title": "Appointments",
+        "new": "New appointment",
+        "edit": "Edit appointment",
+        "details": "Appointment details",
+        "client": "Client",
+        "service": "Service",
+        "staff": "Professional",
+        "date": "Date",
+        "time": "Time",
+        "notes": "Notes",
+        "status": {
+          "pending": "Pending",
+          "confirmed": "Confirmed",
+          "cancelled": "Cancelled",
+          "rescheduled": "Rescheduled",
+          "attended": "Attended",
+          "no_show": "No show"
+        },
+        "actions": {
+          "confirm": "Confirm",
+          "cancel": "Cancel",
+          "reschedule": "Reschedule",
+          "markAttended": "Mark attended",
+          "markNoShow": "Mark no show"
+        },
+        "finalPrice": "Final price"
+      },
+      "services": {
+        "title": "Services",
+        "new": "New service",
+        "edit": "Edit service",
+        "name": "Service name",
+        "duration": "Duration (minutes)",
+        "price": "Price",
+        "assignStaff": "Assign staff"
+      },
+      "staff": {
+        "title": "Staff",
+        "new": "New member",
+        "edit": "Edit staff",
+        "schedule": "Schedule",
+        "services": "Assigned services",
+        "availability": "Availability"
+      },
+      "clients": {
+        "title": "Clients",
+        "new": "New client",
+        "edit": "Edit client",
+        "history": "Appointment history",
+        "totalVisits": "Total visits",
+        "lastVisit": "Last visit"
+      },
+      "businesses": {
+        "title": "Businesses",
+        "new": "New business",
+        "edit": "Edit business",
+        "paymentConfig": "Payment configuration",
+        "payu": "PayU",
+        "transfer": "Bank transfer"
+      },
+      "users": {
+        "title": "Users",
+        "new": "New user",
+        "edit": "Edit user",
+        "role": "Role",
+        "assignBusiness": "Assign to business",
+        "roles": {
+          "super_admin": "Super Admin",
+          "admin": "Admin",
+          "business": "Business",
+          "staff": "Staff",
+          "client": "Client"
+        }
+      },
+      "finance": {
+        "title": "Finance",
+        "income": "Income",
+        "expenses": "Expenses",
+        "balance": "Balance",
+        "period": {
+          "day": "Today",
+          "week": "This week",
+          "month": "This month",
+          "year": "This year"
+        },
+        "payments": "Payments",
+        "newPayment": "Record payment",
+        "platformPayments": "Platform payments"
+      },
+      "reports": {
+        "title": "Reports",
+        "appointments": "Appointments report",
+        "income": "Income report",
+        "clients": "Clients report",
+        "staff": "Staff report",
+        "dateRange": "Date range",
+        "generate": "Generate report"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "markAllRead": "Mark all as read",
+        "noNotifications": "No notifications",
+        "types": {
+          "appointment_created": "Appointment created",
+          "appointment_confirmed": "Appointment confirmed",
+          "appointment_cancelled": "Appointment cancelled",
+          "appointment_rescheduled": "Appointment rescheduled",
+          "appointment_attended": "Appointment attended",
+          "appointment_no_show": "No show"
+        }
+      },
+      "errors": {
+        "required": "This field is required",
+        "invalidEmail": "Invalid email",
+        "passwordMismatch": "Passwords do not match",
+        "minLength": "Minimum {{min}} characters",
+        "serverError": "Server error",
+        "unauthorized": "Unauthorized",
+        "notFound": "Not found"
+      }
+    }
+  }
+}
