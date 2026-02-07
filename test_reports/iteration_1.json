@@ -13,7 +13,7 @@
         "issue": "Mixed Content Security Error - Frontend served over HTTPS but making API calls to HTTP endpoints",
         "symptoms": "All API requests blocked by browser security policy",
         "affected_pages": ["Dashboard", "Businesses", "Users", "Appointments", "All admin pages"],
-        "browser_error": "Mixed Content: The page at 'https://booking-pro-21.preview.emergentagent.com/admin' was loaded over HTTPS, but requested an insecure XMLHttpRequest endpoint 'http://booking-pro-21.preview.emergentagent.com/api/'",
+        "browser_error": "Mixed Content: The page at 'https://admin-roles-perms.preview.emergentagent.com/admin' was loaded over HTTPS, but requested an insecure XMLHttpRequest endpoint 'http://booking-pro-21.preview.emergentagent.com/api/'",
         "fix_priority": "CRITICAL"
       }
     ],
