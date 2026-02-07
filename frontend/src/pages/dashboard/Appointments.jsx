@@ -458,8 +458,8 @@ const Appointments = () => {
                                 {t('appointments.actions.confirm')}
                               </DropdownMenuItem>
                             )}
-                            <DropdownMenuItem onClick={() => updateStatus(apt.id, 'attended')}>
-                              <CheckCircle className="w-4 h-4 mr-2 text-success" />
+                            <DropdownMenuItem onClick={() => openPaymentDialog(apt)} data-testid={`apt-complete-${apt.id}`}>
+                              <DollarSign className="w-4 h-4 mr-2 text-success" />
                               {t('appointments.actions.markAttended')}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => updateStatus(apt.id, 'no_show')}>
@@ -489,6 +489,129 @@ const Appointments = () => {
           )}
         </CardContent>
       </Card>
+      
+      {/* Payment Modal */}
+      <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('appointments.actions.markAttended')}</DialogTitle>
+            <DialogDescription>
+              {selectedAppointment && (
+                <span className="text-muted-foreground">
+                  {selectedAppointment.client?.first_name} {selectedAppointment.client?.last_name} - {selectedAppointment.service?.name}
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* Price display */}
+            {selectedAppointment && (
+              <div className="p-4 bg-muted rounded-lg">
+                <p className="text-sm text-muted-foreground">{t('appointments.finalPrice')}</p>
+                <p className="text-2xl font-bold">${selectedAppointment.price_final || selectedAppointment.service?.price || 0}</p>
+              </div>
+            )}
+            
+            {/* Payment method selection */}
+            <div className="space-y-2">
+              <Label>{t('finance.paymentMethod')}</Label>
+              <div className="grid grid-cols-3 gap-2">
+                <Button
+                  type="button"
+                  variant={paymentMethod === 'cash' ? 'default' : 'outline'}
+                  className={paymentMethod === 'cash' ? 'btn-brand' : ''}
+                  onClick={() => setPaymentMethod('cash')}
+                  data-testid="payment-cash-btn"
+                >
+                  <Banknote className="w-4 h-4 mr-2" />
+                  {t('finance.cash')}
+                </Button>
+                <Button
+                  type="button"
+                  variant={paymentMethod === 'transfer' ? 'default' : 'outline'}
+                  className={paymentMethod === 'transfer' ? 'btn-brand' : ''}
+                  onClick={() => setPaymentMethod('transfer')}
+                  data-testid="payment-transfer-btn"
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  {t('finance.transfer')}
+                </Button>
+                <Button
+                  type="button"
+                  variant={paymentMethod === 'pending' ? 'default' : 'outline'}
+                  className={paymentMethod === 'pending' ? 'btn-brand' : ''}
+                  onClick={() => setPaymentMethod('pending')}
+                  data-testid="payment-pending-btn"
+                >
+                  <Clock className="w-4 h-4 mr-2" />
+                  {t('finance.pending')}
+                </Button>
+              </div>
+            </div>
+            
+            {/* Transfer: upload receipt */}
+            {paymentMethod === 'transfer' && (
+              <div className="space-y-2">
+                <Label>{t('finance.uploadReceipt')}</Label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="border-2 border-dashed rounded-lg p-4 cursor-pointer hover:border-brand transition-colors"
+                >
+                  {receiptPreview ? (
+                    <img src={receiptPreview} alt="Receipt" className="max-h-40 mx-auto rounded" />
+                  ) : (
+                    <div className="text-center text-muted-foreground">
+                      <Upload className="w-8 h-8 mx-auto mb-2" />
+                      <p>{t('finance.uploadReceipt')}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            {/* Pending: reason */}
+            {paymentMethod === 'pending' && (
+              <div className="space-y-2">
+                <Label>{t('finance.pendingReason')}</Label>
+                <Textarea
+                  value={pendingReason}
+                  onChange={(e) => setPendingReason(e.target.value)}
+                  placeholder={t('finance.pendingReason')}
+                  data-testid="pending-reason-input"
+                />
+              </div>
+            )}
+            
+            {/* Actions */}
+            <div className="flex justify-end gap-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setPaymentDialogOpen(false)}>
+                {t('common.cancel')}
+              </Button>
+              <Button 
+                onClick={handlePaymentSubmit} 
+                className="btn-brand"
+                disabled={submittingPayment}
+                data-testid="submit-payment-btn"
+              >
+                {submittingPayment ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                )}
+                {t('common.confirm')}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
