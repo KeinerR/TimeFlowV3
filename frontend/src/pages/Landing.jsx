@@ -29,8 +29,6 @@ import {
 import { format } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
 const Landing = () => {
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
@@ -56,7 +54,7 @@ const Landing = () => {
 
   const fetchBusinesses = async () => {
     try {
-      const res = await axios.get(`${API}/public/businesses`);
+      const res = await api.get('/public/businesses');
       setBusinesses(res.data);
     } catch (error) {
       console.error('Error fetching businesses:', error);
@@ -65,7 +63,7 @@ const Landing = () => {
 
   const fetchServices = async (businessId) => {
     try {
-      const res = await axios.get(`${API}/public/businesses/${businessId}/services`);
+      const res = await api.get(`/public/businesses/${businessId}/services`);
       setServices(res.data);
     } catch (error) {
       console.error('Error fetching services:', error);
@@ -74,7 +72,7 @@ const Landing = () => {
 
   const fetchStaff = async (serviceId) => {
     try {
-      const res = await axios.get(`${API}/public/services/${serviceId}/staff`);
+      const res = await api.get(`/public/services/${serviceId}/staff`);
       setStaffList(res.data);
     } catch (error) {
       console.error('Error fetching staff:', error);
