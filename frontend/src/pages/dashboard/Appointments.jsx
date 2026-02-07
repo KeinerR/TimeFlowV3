@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
@@ -10,13 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
-import { Plus, Calendar as CalendarIcon, Search, Filter, MoreHorizontal, CheckCircle, XCircle, Clock, Loader2 } from 'lucide-react';
+import { Plus, Calendar as CalendarIcon, Search, Filter, MoreHorizontal, CheckCircle, XCircle, Clock, Loader2, DollarSign, Upload, CreditCard, Banknote } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
