@@ -1066,6 +1066,15 @@ async def update_appointment(
     if not apt:
         raise HTTPException(status_code=404, detail="Appointment not found")
     
+    # Data isolation check
+    if current_user["role"] not in ["super_admin"]:
+        if current_user["role"] == "client":
+            if apt["client_id"] != current_user["id"]:
+                raise HTTPException(status_code=403, detail="Not authorized")
+        else:
+            if apt["business_id"] not in current_user.get("businesses", []):
+                raise HTTPException(status_code=403, detail="Not authorized")
+    
     old_status = apt.get("status")
     update_fields = {k: v for k, v in update_data.model_dump().items() if v is not None}
     
@@ -1108,20 +1117,161 @@ async def update_appointment(
                 f"<h2>{message}</h2><p>Servicio: {service['name'] if service else 'N/A'}</p>"
             )
     
-    # If attended and price_final set, create income record
-    if new_status == "attended" and update_data.price_final:
-        payment = {
-            "id": str(uuid.uuid4()),
-            "business_id": apt["business_id"],
-            "appointment_id": appointment_id,
-            "amount": update_data.price_final,
-            "method": "pending",
-            "status": "completed",
-            "created_at": datetime.now(timezone.utc).isoformat()
-        }
-        await db.payments.insert_one(payment)
-    
     return serialize_doc(updated)
+
+# New endpoint for completing appointment with payment
+@appointments_router.post("/{appointment_id}/complete")
+async def complete_appointment_with_payment(
+    appointment_id: str,
+    payment_request: AppointmentPaymentRequest,
+    current_user: dict = Depends(require_roles(["super_admin", "admin", "business", "staff"]))
+):
+    apt = await db.appointments.find_one({"id": appointment_id}, {"_id": 0})
+    if not apt:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        if apt["business_id"] not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="Not authorized")
+    
+    if apt.get("status") in ["attended", "cancelled"]:
+        raise HTTPException(status_code=400, detail="Appointment already completed or cancelled")
+    
+    service = await db.services.find_one({"id": apt["service_id"]}, {"_id": 0})
+    price = apt.get("price_final") or (service.get("price") if service else 0)
+    
+    # Update appointment status to attended
+    await db.appointments.update_one(
+        {"id": appointment_id},
+        {"$set": {"status": "attended", "price_final": price}}
+    )
+    
+    # Handle payment based on method
+    payment_status = "completed"
+    pending_reason = None
+    receipt_url = None
+    
+    if payment_request.payment_method == "cash":
+        payment_status = "completed"
+    elif payment_request.payment_method == "transfer":
+        payment_status = "pending_validation"
+        if payment_request.receipt_image:
+            # Store base64 image as receipt_url (in production, upload to storage)
+            receipt_url = payment_request.receipt_image
+    elif payment_request.payment_method == "pending":
+        payment_status = "pending_payment"
+        pending_reason = payment_request.pending_reason or "Payment pending"
+    
+    # Create payment record
+    payment = {
+        "id": str(uuid.uuid4()),
+        "business_id": apt["business_id"],
+        "appointment_id": appointment_id,
+        "amount": price,
+        "method": payment_request.payment_method,
+        "status": payment_status,
+        "pending_reason": pending_reason,
+        "receipt_url": receipt_url,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.payments.insert_one(payment)
+    
+    # Notifications
+    client = await db.users.find_one({"id": apt["client_id"]}, {"_id": 0})
+    staff = await db.staff.find_one({"id": apt["staff_id"]}, {"_id": 0})
+    
+    await send_notification(
+        apt["client_id"],
+        "appointment_attended",
+        "Cita Atendida",
+        f"Tu cita ha sido completada exitosamente"
+    )
+    
+    if staff:
+        await send_notification(
+            staff["user_id"],
+            "appointment_attended",
+            "Cita Completada",
+            f"Has completado una cita"
+        )
+    
+    return {
+        "message": "Appointment completed",
+        "appointment_id": appointment_id,
+        "payment_id": payment["id"],
+        "payment_status": payment_status,
+        "amount": price
+    }
+
+# Validate pending transfer payment
+@appointments_router.post("/{appointment_id}/validate-payment")
+async def validate_payment(
+    appointment_id: str,
+    approved: bool = True,
+    current_user: dict = Depends(require_roles(["super_admin", "admin", "business"]))
+):
+    apt = await db.appointments.find_one({"id": appointment_id}, {"_id": 0})
+    if not apt:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        if apt["business_id"] not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="Not authorized")
+    
+    payment = await db.payments.find_one({"appointment_id": appointment_id}, {"_id": 0})
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment not found")
+    
+    if payment.get("status") != "pending_validation":
+        raise HTTPException(status_code=400, detail="Payment is not pending validation")
+    
+    new_status = "completed" if approved else "rejected"
+    await db.payments.update_one(
+        {"id": payment["id"]},
+        {"$set": {"status": new_status, "validated_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    return {"message": f"Payment {'approved' if approved else 'rejected'}", "payment_id": payment["id"]}
+
+# Confirm pending payment
+@appointments_router.post("/{appointment_id}/confirm-payment")
+async def confirm_pending_payment(
+    appointment_id: str,
+    payment_method: str,
+    receipt_image: Optional[str] = None,
+    current_user: dict = Depends(require_roles(["super_admin", "admin", "business", "staff"]))
+):
+    apt = await db.appointments.find_one({"id": appointment_id}, {"_id": 0})
+    if not apt:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        if apt["business_id"] not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="Not authorized")
+    
+    payment = await db.payments.find_one({"appointment_id": appointment_id}, {"_id": 0})
+    if not payment:
+        raise HTTPException(status_code=404, detail="Payment not found")
+    
+    if payment.get("status") != "pending_payment":
+        raise HTTPException(status_code=400, detail="Payment is not pending")
+    
+    new_status = "completed" if payment_method == "cash" else "pending_validation"
+    update_data = {
+        "status": new_status,
+        "method": payment_method,
+        "confirmed_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    if receipt_image:
+        update_data["receipt_url"] = receipt_image
+    
+    await db.payments.update_one({"id": payment["id"]}, {"$set": update_data})
+    
+    return {"message": "Payment confirmed", "payment_id": payment["id"], "status": new_status}
 
 @appointments_router.delete("/{appointment_id}")
 async def cancel_appointment(appointment_id: str, current_user: dict = Depends(get_current_user)):
