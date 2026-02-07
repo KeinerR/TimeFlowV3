@@ -47,6 +47,16 @@ const Appointments = () => {
     time: '',
     notes: ''
   });
+  
+  // Payment modal state
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [pendingReason, setPendingReason] = useState('');
+  const [receiptImage, setReceiptImage] = useState(null);
+  const [receiptPreview, setReceiptPreview] = useState(null);
+  const [submittingPayment, setSubmittingPayment] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchData();
