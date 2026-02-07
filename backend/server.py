@@ -328,7 +328,7 @@ async def get_optional_user(token: Optional[str] = None) -> Optional[dict]:
         return None
     try:
         return await get_current_user(token)
-    except:
+    except Exception:
         return None
 
 def require_roles(allowed_roles: List[str]):
