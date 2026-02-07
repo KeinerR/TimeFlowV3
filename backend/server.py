@@ -505,7 +505,7 @@ async def get_user(user_id: str, current_user: dict = Depends(require_roles(["su
 async def create_user(
     user_data: UserCreate,
     role: str = "client",
-    business_ids: List[str] = [],
+    business_ids: Optional[str] = None,
     current_user: dict = Depends(require_roles(["super_admin", "admin", "business"]))
 ):
     existing = await db.users.find_one({"email": user_data.email}, {"_id": 0})
@@ -515,13 +515,18 @@ async def create_user(
     if current_user["role"] != "super_admin" and role in ["super_admin", "admin"]:
         raise HTTPException(status_code=403, detail="Cannot create users with this role")
     
+    # Parse business_ids from comma-separated string
+    business_list = []
+    if business_ids:
+        business_list = [bid.strip() for bid in business_ids.split(",") if bid.strip()]
+    
     user = User(
         email=user_data.email,
         first_name=user_data.first_name,
         last_name=user_data.last_name,
         phone=user_data.phone,
         role=role,
-        businesses=business_ids
+        businesses=business_list
     )
     user_dict = user.model_dump()
     user_dict["password_hash"] = get_password_hash(user_data.password)
