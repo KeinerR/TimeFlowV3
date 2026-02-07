@@ -1,8 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
-
-// Fix mixed content issue - ensure HTTPS is used
-const API = `${(process.env.REACT_APP_BACKEND_URL || 'https://booking-pro-21.preview.emergentagent.com')}/api`;
+import api from '@/lib/api';
 
 const AuthContext = createContext(null);
 
@@ -21,7 +18,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       fetchUser();
     } else {
       setLoading(false);
@@ -30,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`${API}/auth/me`);
+      const response = await api.get('/auth/me');
       setUser(response.data);
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -45,23 +41,21 @@ export const AuthProvider = ({ children }) => {
     formData.append('username', email);
     formData.append('password', password);
 
-    const response = await axios.post(`${API}/auth/login`, formData, {
+    const response = await api.post('/auth/login', formData, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
     const { access_token, user: userData } = response.data;
     localStorage.setItem('token', access_token);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
     setToken(access_token);
     setUser(userData);
     return userData;
   };
 
   const register = async (userData) => {
-    const response = await axios.post(`${API}/auth/register`, userData);
+    const response = await api.post('/auth/register', userData);
     const { access_token, user: newUser } = response.data;
     localStorage.setItem('token', access_token);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
     setToken(access_token);
     setUser(newUser);
     return newUser;
@@ -69,7 +63,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
     setToken(null);
     setUser(null);
   };
