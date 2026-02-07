@@ -36,8 +36,8 @@ SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
-# Create the main app with redirect_slashes disabled to avoid mixed content issues
-app = FastAPI(title="TimeFlow API", version="1.0.0", redirect_slashes=False)
+# Create the main app
+app = FastAPI(title="TimeFlow API", version="1.0.0")
 
 # Create routers
 api_router = APIRouter(prefix="/api")
