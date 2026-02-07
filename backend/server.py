@@ -741,9 +741,17 @@ async def get_services(
     query = {}
     
     if business_id:
+        # Data isolation check
+        if current_user["role"] not in ["super_admin", "client"]:
+            if business_id not in current_user.get("businesses", []):
+                raise HTTPException(status_code=403, detail="No access to this business")
         query["business_id"] = business_id
     elif current_user["role"] not in ["super_admin", "client"]:
-        query["business_id"] = {"$in": current_user.get("businesses", [])}
+        user_businesses = current_user.get("businesses", [])
+        if user_businesses:
+            query["business_id"] = {"$in": user_businesses}
+        else:
+            return []  # No businesses assigned
     
     if is_active is not None:
         query["is_active"] = is_active
@@ -752,10 +760,16 @@ async def get_services(
     return [serialize_doc(s) for s in services]
 
 @services_router.get("/{service_id}")
-async def get_service(service_id: str):
+async def get_service(service_id: str, current_user: dict = Depends(get_current_user)):
     service = await db.services.find_one({"id": service_id}, {"_id": 0})
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
+    
+    # Data isolation check (clients and super_admin can see all active services)
+    if current_user["role"] not in ["super_admin", "client"]:
+        if service["business_id"] not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="No access to this service")
+    
     return serialize_doc(service)
 
 @services_router.post("/")
@@ -763,6 +777,11 @@ async def create_service(
     service_data: ServiceCreate,
     current_user: dict = Depends(require_roles(["super_admin", "admin", "business"]))
 ):
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        if service_data.business_id not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="No access to this business")
+    
     business = await db.businesses.find_one({"id": service_data.business_id}, {"_id": 0})
     if not business:
         raise HTTPException(status_code=404, detail="Business not found")
@@ -790,6 +809,11 @@ async def update_service(
     service = await db.services.find_one({"id": service_id}, {"_id": 0})
     if not service:
         raise HTTPException(status_code=404, detail="Service not found")
+    
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        if service["business_id"] not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="No access to this service")
     
     update_fields = {k: v for k, v in update_data.model_dump().items() if v is not None}
     
