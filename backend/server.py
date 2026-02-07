@@ -1460,8 +1460,10 @@ async def mark_all_read(current_user: dict = Depends(get_current_user)):
 async def get_business_income(
     business_id: str,
     period: str = "month",
+    status: Optional[str] = None,  # completed, pending_validation, pending_payment
     current_user: dict = Depends(require_roles(["super_admin", "admin", "business"]))
 ):
+    # Data isolation check
     if current_user["role"] != "super_admin":
         if business_id not in current_user.get("businesses", []):
             business = await db.businesses.find_one({"id": business_id, "owner_id": current_user["id"]}, {"_id": 0})
@@ -1481,21 +1483,75 @@ async def get_business_income(
     else:
         start_date = now - timedelta(days=30)
     
-    payments = await db.payments.find({
+    query = {
         "business_id": business_id,
         "created_at": {"$gte": start_date.isoformat()}
-    }, {"_id": 0}).to_list(1000)
+    }
     
-    total = sum(p.get("amount", 0) for p in payments)
+    if status:
+        query["status"] = status
+    
+    payments = await db.payments.find(query, {"_id": 0}).to_list(1000)
+    
+    # Calculate totals by status
+    total_completed = sum(p.get("amount", 0) for p in payments if p.get("status") == "completed")
+    total_pending_validation = sum(p.get("amount", 0) for p in payments if p.get("status") == "pending_validation")
+    total_pending_payment = sum(p.get("amount", 0) for p in payments if p.get("status") == "pending_payment")
+    
+    # Group by payment method
+    by_method = {}
+    for p in payments:
+        method = p.get("method", "unknown")
+        if method not in by_method:
+            by_method[method] = {"completed": 0, "pending_validation": 0, "pending_payment": 0}
+        by_method[method][p.get("status", "completed")] += p.get("amount", 0)
     
     return {
         "business_id": business_id,
         "period": period,
         "start_date": start_date.isoformat(),
-        "total_income": total,
+        "total_completed": total_completed,
+        "total_pending_validation": total_pending_validation,
+        "total_pending_payment": total_pending_payment,
+        "total_all": total_completed + total_pending_validation + total_pending_payment,
+        "by_method": by_method,
         "payment_count": len(payments),
         "payments": [serialize_doc(p) for p in payments]
     }
+
+# Get payments pending validation
+@finance_router.get("/pending-validation/{business_id}")
+async def get_pending_validation_payments(
+    business_id: str,
+    current_user: dict = Depends(require_roles(["super_admin", "admin", "business"]))
+):
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        if business_id not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="Not authorized")
+    
+    payments = await db.payments.find({
+        "business_id": business_id,
+        "status": "pending_validation"
+    }, {"_id": 0}).to_list(100)
+    
+    # Enrich with appointment and client info
+    result = []
+    for p in payments:
+        payment_data = serialize_doc(p)
+        if p.get("appointment_id"):
+            apt = await db.appointments.find_one({"id": p["appointment_id"]}, {"_id": 0})
+            if apt:
+                client = await db.users.find_one({"id": apt.get("client_id")}, {"_id": 0, "password_hash": 0})
+                service = await db.services.find_one({"id": apt.get("service_id")}, {"_id": 0})
+                payment_data["appointment"] = serialize_doc(apt)
+                if client:
+                    payment_data["client"] = client
+                if service:
+                    payment_data["service"] = serialize_doc(service)
+        result.append(payment_data)
+    
+    return result
 
 @finance_router.post("/payment")
 async def record_payment(
