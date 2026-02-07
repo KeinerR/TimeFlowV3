@@ -229,7 +229,20 @@
         },
         "payments": "Pagos",
         "newPayment": "Registrar pago",
-        "platformPayments": "Pagos a la plataforma"
+        "platformPayments": "Pagos a la plataforma",
+        "paymentMethod": "Método de pago",
+        "cash": "Efectivo",
+        "transfer": "Transferencia",
+        "pending": "Pendiente",
+        "completed": "Completado",
+        "pendingValidation": "Pendiente validación",
+        "pendingPayment": "Pago pendiente",
+        "uploadReceipt": "Subir comprobante",
+        "pendingReason": "Razón del pendiente",
+        "validatePayment": "Validar pago",
+        "confirmPayment": "Confirmar pago",
+        "totalCompleted": "Total completado",
+        "totalPending": "Total pendiente"
       },
       "reports": {
         "title": "Reportes",
@@ -494,7 +507,20 @@
         },
         "payments": "Payments",
         "newPayment": "Record payment",
-        "platformPayments": "Platform payments"
+        "platformPayments": "Platform payments",
+        "paymentMethod": "Payment method",
+        "cash": "Cash",
+        "transfer": "Transfer",
+        "pending": "Pending",
+        "completed": "Completed",
+        "pendingValidation": "Pending validation",
+        "pendingPayment": "Payment pending",
+        "uploadReceipt": "Upload receipt",
+        "pendingReason": "Pending reason",
+        "validatePayment": "Validate payment",
+        "confirmPayment": "Confirm payment",
+        "totalCompleted": "Total completed",
+        "totalPending": "Total pending"
       },
       "reports": {
         "title": "Reports",
