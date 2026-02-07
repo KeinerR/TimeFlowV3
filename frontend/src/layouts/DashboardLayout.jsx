@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import axios from 'axios';
+import api from '@/lib/api';
 import {
   LayoutDashboard,
   Calendar,
