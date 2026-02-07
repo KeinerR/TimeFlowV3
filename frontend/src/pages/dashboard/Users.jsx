@@ -82,7 +82,8 @@ const UsersPage = () => {
         }
         toast.success(t('common.save'));
       } else {
-        await api.post(`/users?role=${formData.role}&business_ids=${formData.business_ids.join(',')}`, {
+        const businessIdsParam = formData.business_ids.length > 0 ? formData.business_ids.join(',') : '';
+        await api.post(`/users?role=${formData.role}&business_ids=${businessIdsParam}`, {
           email: formData.email,
           password: formData.password,
           first_name: formData.first_name,
@@ -95,7 +96,20 @@ const UsersPage = () => {
       resetForm();
       fetchData();
     } catch (error) {
-      toast.error(error.response?.data?.detail || t('errors.serverError'));
+      // Handle error message properly
+      let errorMessage = t('errors.serverError');
+      if (error.response?.data?.detail) {
+        const detail = error.response.data.detail;
+        if (typeof detail === 'string') {
+          errorMessage = detail;
+        } else if (Array.isArray(detail)) {
+          // Pydantic validation error
+          errorMessage = detail.map(d => d.msg || d.message || JSON.stringify(d)).join(', ');
+        } else if (typeof detail === 'object') {
+          errorMessage = detail.msg || detail.message || JSON.stringify(detail);
+        }
+      }
+      toast.error(errorMessage);
     }
   };
 
