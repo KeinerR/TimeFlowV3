@@ -834,9 +834,17 @@ async def get_staff(
     query = {}
     
     if business_id:
+        # Data isolation check (clients and super_admin can see staff for booking)
+        if current_user["role"] not in ["super_admin", "client"]:
+            if business_id not in current_user.get("businesses", []):
+                raise HTTPException(status_code=403, detail="No access to this business")
         query["business_id"] = business_id
     elif current_user["role"] not in ["super_admin", "client"]:
-        query["business_id"] = {"$in": current_user.get("businesses", [])}
+        user_businesses = current_user.get("businesses", [])
+        if user_businesses:
+            query["business_id"] = {"$in": user_businesses}
+        else:
+            return []
     
     if service_id:
         query["service_ids"] = service_id
@@ -856,10 +864,15 @@ async def get_staff(
     return result
 
 @staff_router.get("/{staff_id}")
-async def get_staff_member(staff_id: str):
+async def get_staff_member(staff_id: str, current_user: dict = Depends(get_current_user)):
     staff = await db.staff.find_one({"id": staff_id}, {"_id": 0})
     if not staff:
         raise HTTPException(status_code=404, detail="Staff not found")
+    
+    # Data isolation check
+    if current_user["role"] not in ["super_admin", "client"]:
+        if staff["business_id"] not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="No access to this staff")
     
     user = await db.users.find_one({"id": staff["user_id"]}, {"_id": 0, "password_hash": 0})
     if user:
@@ -872,6 +885,11 @@ async def create_staff(
     staff_data: StaffCreate,
     current_user: dict = Depends(require_roles(["super_admin", "admin", "business"]))
 ):
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        if staff_data.business_id not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="No access to this business")
+    
     user = await db.users.find_one({"id": staff_data.user_id}, {"_id": 0})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -916,6 +934,11 @@ async def update_staff(
     staff = await db.staff.find_one({"id": staff_id}, {"_id": 0})
     if not staff:
         raise HTTPException(status_code=404, detail="Staff not found")
+    
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        if staff["business_id"] not in current_user.get("businesses", []):
+            raise HTTPException(status_code=403, detail="No access to this staff")
     
     update_fields = {k: v for k, v in update_data.model_dump().items() if v is not None}
     
