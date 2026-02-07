@@ -466,24 +466,49 @@ async def get_users(
     role: Optional[str] = None,
     business_id: Optional[str] = None,
     is_active: Optional[bool] = None,
-    current_user: dict = Depends(require_roles(["super_admin", "admin", "business"]))
+    current_user: dict = Depends(require_roles(["super_admin", "admin", "business", "staff"]))
 ):
     query = {}
     
-    if current_user["role"] == "super_admin":
-        pass
-    elif current_user["role"] == "admin":
-        query["$or"] = [
-            {"businesses": {"$in": current_user.get("businesses", [])}},
-            {"id": {"$in": await get_business_user_ids(current_user.get("businesses", []))}}
-        ]
-    elif current_user["role"] == "business":
-        query["businesses"] = {"$in": current_user.get("businesses", [])}
+    # CRITICAL: Hide super_admin from all non-super_admin users
+    if current_user["role"] != "super_admin":
+        query["role"] = {"$ne": "super_admin"}
     
+    # Data isolation by business
+    if current_user["role"] == "super_admin":
+        pass  # Super admin can see all users
+    elif current_user["role"] == "admin":
+        user_businesses = current_user.get("businesses", [])
+        if user_businesses:
+            query["$or"] = [
+                {"businesses": {"$in": user_businesses}},
+                {"id": {"$in": await get_business_user_ids(user_businesses)}}
+            ]
+        else:
+            query["id"] = current_user["id"]  # Only see themselves if no businesses
+    elif current_user["role"] in ["business", "staff"]:
+        user_businesses = current_user.get("businesses", [])
+        if user_businesses:
+            query["businesses"] = {"$in": user_businesses}
+        else:
+            query["id"] = current_user["id"]
+    
+    # Apply role filter (but respect super_admin hiding)
     if role:
-        query["role"] = role
+        if current_user["role"] != "super_admin" and role == "super_admin":
+            return []  # Cannot request super_admin list
+        if "role" in query and isinstance(query["role"], dict):
+            query["role"]["$eq"] = role
+        else:
+            query["role"] = role
+    
     if business_id:
+        # Validate user has access to this business
+        if current_user["role"] != "super_admin":
+            if business_id not in current_user.get("businesses", []):
+                raise HTTPException(status_code=403, detail="No access to this business")
         query["businesses"] = business_id
+    
     if is_active is not None:
         query["is_active"] = is_active
     
@@ -495,10 +520,23 @@ async def get_business_user_ids(business_ids: List[str]) -> List[str]:
     return [b["owner_id"] for b in businesses]
 
 @users_router.get("/{user_id}", response_model=UserResponse)
-async def get_user(user_id: str, current_user: dict = Depends(require_roles(["super_admin", "admin", "business"]))):
+async def get_user(user_id: str, current_user: dict = Depends(require_roles(["super_admin", "admin", "business", "staff"]))):
     user = await db.users.find_one({"id": user_id}, {"_id": 0, "password_hash": 0})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    
+    # CRITICAL: Hide super_admin from non-super_admin users
+    if user.get("role") == "super_admin" and current_user["role"] != "super_admin":
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Data isolation: verify access to this user
+    if current_user["role"] != "super_admin":
+        user_businesses = current_user.get("businesses", [])
+        target_businesses = user.get("businesses", [])
+        has_access = bool(set(user_businesses) & set(target_businesses)) or user_id == current_user["id"]
+        if not has_access:
+            raise HTTPException(status_code=403, detail="No access to this user")
+    
     return UserResponse(**user)
 
 @users_router.post("/", response_model=UserResponse)
@@ -545,10 +583,33 @@ async def update_user(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
+    # CRITICAL: Cannot modify super_admin unless you are super_admin
+    if user.get("role") == "super_admin" and current_user["role"] != "super_admin":
+        raise HTTPException(status_code=403, detail="Cannot modify this user")
+    
+    # Data isolation check
+    if current_user["role"] != "super_admin":
+        user_businesses = current_user.get("businesses", [])
+        target_businesses = user.get("businesses", [])
+        has_access = bool(set(user_businesses) & set(target_businesses))
+        if not has_access and user_id != current_user["id"]:
+            raise HTTPException(status_code=403, detail="No access to this user")
+    
     update_fields = {k: v for k, v in update_data.model_dump().items() if v is not None}
     
-    if "role" in update_fields and current_user["role"] != "super_admin":
-        del update_fields["role"]
+    # Role change validation
+    if "role" in update_fields:
+        if current_user["role"] != "super_admin":
+            # Non-super_admin cannot change to super_admin or admin
+            if update_fields["role"] in ["super_admin", "admin"]:
+                raise HTTPException(status_code=403, detail="Cannot assign this role")
+            # Non-super_admin cannot change their own role
+            if user_id == current_user["id"]:
+                del update_fields["role"]
+        else:
+            # Super admin can change any role, but validate it's a valid role
+            if update_fields["role"] not in ROLES:
+                raise HTTPException(status_code=400, detail="Invalid role")
     
     if update_fields:
         await db.users.update_one({"id": user_id}, {"$set": update_fields})
